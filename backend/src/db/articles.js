@@ -19,3 +19,25 @@ export async function enregistrerArticleBrouillon({
   );
   return rows[0];
 }
+
+export async function marquerArticlePublie(id, scoreConfiance) {
+  const { rows } = await pool.query(
+    `UPDATE articles
+     SET statut = 'publie', score_confiance = $2, publie_le = now(), updated_at = now()
+     WHERE id = $1
+     RETURNING *`,
+    [id, scoreConfiance]
+  );
+  return rows[0];
+}
+
+export async function marquerArticleAnnule(id, scoreConfiance, raison) {
+  const { rows } = await pool.query(
+    `UPDATE articles
+     SET statut = 'annule', score_confiance = $2, raison_annulation = $3, updated_at = now()
+     WHERE id = $1
+     RETURNING *`,
+    [id, scoreConfiance, raison]
+  );
+  return rows[0];
+}
