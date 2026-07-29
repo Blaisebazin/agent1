@@ -1,4 +1,4 @@
-import { creerMessageAvecOutils, extraireTexte, extraireJson } from './anthropicClient.js';
+import { creerMessageJson } from './anthropicClient.js';
 
 function buildSystemPrompt(domaine) {
   const ton = domaine.ton || 'neutre, factuel, journalistique';
@@ -24,7 +24,9 @@ Réponds UNIQUEMENT avec un bloc de code JSON (\`\`\`json ... \`\`\`) contenant 
 - "extrait" : 1 à 2 phrases pour la méta-description
 - "corps" : le corps complet de l'article en Markdown, avec citations en liens Markdown vers les sources
 - "sources" : tableau [{"titre": string, "url": string}] de toutes les sources effectivement citées dans le corps
-- "mots_cles_seo" : tableau de 5 à 8 mots-clés pertinents pour le référencement`;
+- "mots_cles_seo" : tableau de 5 à 8 mots-clés pertinents pour le référencement
+
+Dans les valeurs de chaîne du JSON (notamment "corps"), n'utilise jamais de guillemets droits (") pour une citation directe — utilise des guillemets français « » à la place ; réserve le caractère " exclusivement à la syntaxe JSON et aux liens Markdown.`;
 }
 
 function buildUserPrompt(domaine, sujetRetenu) {
@@ -43,7 +45,7 @@ Lis ces sources et recherche-en d'autres si nécessaire pour croiser les points 
 }
 
 export async function redigerArticle(domaine, sujetRetenu) {
-  const response = await creerMessageAvecOutils({
+  const article = await creerMessageJson({
     system: buildSystemPrompt(domaine),
     messages: [{ role: 'user', content: buildUserPrompt(domaine, sujetRetenu) }],
     tools: [
@@ -54,8 +56,6 @@ export async function redigerArticle(domaine, sujetRetenu) {
     effort: 'high',
     label: `redaction:${domaine.slug}`,
   });
-
-  const article = extraireJson(extraireTexte(response));
 
   if (!article.titre || !article.corps || !Array.isArray(article.sources) || article.sources.length === 0) {
     throw new Error('Article généré incomplet (titre, corps ou sources manquants).');

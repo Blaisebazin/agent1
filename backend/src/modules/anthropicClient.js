@@ -112,3 +112,37 @@ export function extraireJson(texte) {
   }
   return JSON.parse(brut.slice(debut, fin + 1));
 }
+
+const CONSIGNE_CORRECTION_JSON =
+  "Le bloc JSON ci-dessus n'a pas pu être analysé (JSON invalide). Renvoie EXACTEMENT le même contenu, sous forme d'un unique bloc ```json ... ``` valide, sans aucun texte avant ou après. N'utilise jamais de guillemets droits (\") à l'intérieur des valeurs de chaîne pour citer un mot ou une expression — utilise des guillemets français « » à la place ; réserve le caractère \" exclusivement à la syntaxe JSON.";
+
+// Appelle le modèle et extrait un JSON structuré depuis la réponse finale.
+// En cas de JSON mal formé (fréquent quand l'article/l'audit cite des
+// guillemets droits à l'intérieur d'une chaîne), tente une unique
+// correction avant d'abandonner.
+export async function creerMessageJson({ system, messages, tools, maxTokens = 4096, effort = 'medium', label = 'appel' }) {
+  const response = await creerMessageAvecOutils({ system, messages, tools, maxTokens, effort, label });
+
+  try {
+    return extraireJson(extraireTexte(response));
+  } catch (erreur) {
+    console.warn(`[${label}] JSON invalide (${erreur.message.slice(0, 200)}) — tentative de correction...`);
+
+    const historiqueCorrection = [
+      ...messages,
+      { role: 'assistant', content: response.content },
+      { role: 'user', content: CONSIGNE_CORRECTION_JSON },
+    ];
+
+    const reponseCorrigee = await creerMessageAvecOutils({
+      system,
+      messages: historiqueCorrection,
+      tools: [],
+      maxTokens,
+      effort: 'low',
+      label: `${label}:correction`,
+    });
+
+    return extraireJson(extraireTexte(reponseCorrigee));
+  }
+}

@@ -1,4 +1,4 @@
-import { creerMessageAvecOutils, extraireTexte, extraireJson } from './anthropicClient.js';
+import { creerMessageJson } from './anthropicClient.js';
 
 // Seuil volontairement élevé au démarrage — à recalibrer après une phase de
 // test réelle (cf. cahier des charges, section 10.4).
@@ -18,7 +18,9 @@ Réponds UNIQUEMENT avec un bloc de code JSON (\`\`\`json ... \`\`\`) contenant 
 - "affirmations_problematiques" : tableau de {"affirmation": string, "probleme": string} pour toute affirmation non vérifiée, mal sourcée ou contredite (tableau vide si aucune)
 - "contradictions_entre_sources" : tableau de chaînes décrivant toute contradiction significative entre sources non signalée dans l'article (tableau vide si aucune)
 - "verdict" : "publiable" ou "a_rejeter"
-- "raison" : explication brève du verdict, en une ou deux phrases`;
+- "raison" : explication brève du verdict, en une ou deux phrases
+
+Dans les valeurs de chaîne du JSON, n'utilise jamais de guillemets droits (") pour citer un mot ou une expression — utilise des guillemets français « » à la place ; réserve le caractère " exclusivement à la syntaxe JSON.`;
 
 function buildUserPrompt(article) {
   const sourcesListe = (article.sources || []).map((s) => `- ${s.titre} — ${s.url}`).join('\n');
@@ -35,7 +37,7 @@ Vérifie chaque affirmation factuelle importante en consultant si nécessaire le
 }
 
 export async function verifierArticle(article) {
-  const response = await creerMessageAvecOutils({
+  const rapport = await creerMessageJson({
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: buildUserPrompt(article) }],
     tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 8 }],
@@ -43,8 +45,6 @@ export async function verifierArticle(article) {
     effort: 'high',
     label: 'verification',
   });
-
-  const rapport = extraireJson(extraireTexte(response));
 
   const scoreConfiance = Number(rapport.score_confiance);
   const problemes = rapport.affirmations_problematiques || [];

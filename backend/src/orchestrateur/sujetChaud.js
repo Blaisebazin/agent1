@@ -1,4 +1,4 @@
-import { creerMessageAvecOutils, extraireTexte, extraireJson } from '../modules/anthropicClient.js';
+import { creerMessageJson } from '../modules/anthropicClient.js';
 
 // Seuil volontairement élevé au démarrage — à recalibrer après une phase de
 // test réelle (cf. cahier des charges, section 5 et 10.4).
@@ -37,7 +37,9 @@ Réponds UNIQUEMENT avec un bloc de code JSON (\`\`\`json ... \`\`\`) contenant 
 - "justification" : explication brève du score, en citant le(s) critère(s) concerné(s)
 - "titre_sujet" : titre court du sujet si détecté, sinon null
 - "resume" : résumé en 2-3 phrases si détecté, sinon null
-- "sources" : tableau [{"titre": string, "url": string}] si détecté, sinon null`;
+- "sources" : tableau [{"titre": string, "url": string}] si détecté, sinon null
+
+N'utilise jamais de guillemets droits (") à l'intérieur des valeurs de chaîne pour citer un mot ou une expression — utilise des guillemets français « » à la place ; réserve le caractère " exclusivement à la syntaxe JSON.`;
 }
 
 function buildUserPrompt(domaine) {
@@ -48,7 +50,7 @@ Effectue le scan maintenant.`;
 }
 
 export async function detecterSujetChaud(domaine) {
-  const response = await creerMessageAvecOutils({
+  const rapport = await creerMessageJson({
     system: buildSystemPrompt(domaine),
     messages: [{ role: 'user', content: buildUserPrompt(domaine) }],
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 3 }],
@@ -57,7 +59,6 @@ export async function detecterSujetChaud(domaine) {
     label: `scan-reactif:${domaine.slug}`,
   });
 
-  const rapport = extraireJson(extraireTexte(response));
   const score = Number(rapport.score);
 
   return {
