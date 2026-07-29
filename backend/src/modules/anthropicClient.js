@@ -3,33 +3,38 @@ import { env } from '../config/env.js';
 
 export const client = new Anthropic({ apiKey: env.anthropicApiKey });
 
-export async function creerMessageAvecOutils({ system, messages, tools, maxTokens = 4096, effort = 'medium' }) {
-  let historique = messages;
-  let response = await client.messages.create({
-    model: env.anthropicModel,
-    max_tokens: maxTokens,
-    system,
-    tools,
-    output_config: { effort },
-    messages: historique,
-  });
-
-  let continuations = 0;
-  while (response.stop_reason === 'pause_turn' && continuations < 3) {
-    historique = [...historique, { role: 'assistant', content: response.content }];
-    response = await client.messages.create({
+async function appelerModele({ system, tools, maxTokens, effort, messages }) {
+  return client.messages
+    .stream({
       model: env.anthropicModel,
       max_tokens: maxTokens,
       system,
       tools,
       output_config: { effort },
-      messages: historique,
-    });
+      messages,
+    })
+    .finalMessage();
+}
+
+export async function creerMessageAvecOutils({ system, messages, tools, maxTokens = 4096, effort = 'medium' }) {
+  let historique = messages;
+  let response = await appelerModele({ system, tools, maxTokens, effort, messages: historique });
+
+  let continuations = 0;
+  while (response.stop_reason === 'pause_turn' && continuations < 3) {
+    historique = [...historique, { role: 'assistant', content: response.content }];
+    response = await appelerModele({ system, tools, maxTokens, effort, messages: historique });
     continuations += 1;
   }
 
   if (response.stop_reason === 'refusal') {
     throw new Error(`Requête refusée par les garde-fous du modèle (catégorie : ${response.stop_details?.category ?? 'inconnue'})`);
+  }
+
+  if (response.stop_reason === 'max_tokens') {
+    throw new Error(
+      `Réponse tronquée : la limite de max_tokens (${maxTokens}) a été atteinte avant la fin de la génération. Augmenter maxTokens pour cet appel.`
+    );
   }
 
   return response;

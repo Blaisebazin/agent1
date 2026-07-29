@@ -39,7 +39,7 @@ export async function verifierArticle(article) {
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: buildUserPrompt(article) }],
     tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 8 }],
-    maxTokens: 4096,
+    maxTokens: 12000,
     effort: 'high',
   });
 

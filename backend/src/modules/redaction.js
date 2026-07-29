@@ -50,7 +50,7 @@ export async function redigerArticle(domaine, sujetRetenu) {
       { type: 'web_search_20260209', name: 'web_search', max_uses: 6 },
       { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 6 },
     ],
-    maxTokens: 8000,
+    maxTokens: 24000,
     effort: 'high',
   });
 
