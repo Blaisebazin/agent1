@@ -10,11 +10,14 @@
     "veille:test": "node src/scripts/test-veille.js",
     "selection:test": "node src/scripts/test-selection.js",
     "redaction:test": "node src/scripts/test-redaction.js",
-    "verification:test": "node src/scripts/test-verification.js"
+    "verification:test": "node src/scripts/test-verification.js",
+    "scan-reactif:test": "node src/scripts/test-scan-reactif.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
     "dotenv": "^16.4.5",
+    "node-cron": "^4.6.0",
     "pg": "^8.13.1"
   }
 }
