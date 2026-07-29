@@ -25,6 +25,7 @@ export async function rechercherSujets(domaine) {
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 5 }],
     maxTokens: 4096,
     effort: 'medium',
+    label: `veille:${domaine.slug}`,
   });
 
   const candidats = extraireJson(extraireTexte(response));

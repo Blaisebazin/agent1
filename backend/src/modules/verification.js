@@ -41,6 +41,7 @@ export async function verifierArticle(article) {
     tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 8 }],
     maxTokens: 12000,
     effort: 'high',
+    label: 'verification',
   });
 
   const rapport = extraireJson(extraireTexte(response));

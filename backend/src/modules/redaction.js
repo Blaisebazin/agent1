@@ -52,6 +52,7 @@ export async function redigerArticle(domaine, sujetRetenu) {
     ],
     maxTokens: 24000,
     effort: 'high',
+    label: `redaction:${domaine.slug}`,
   });
 
   const article = extraireJson(extraireTexte(response));
