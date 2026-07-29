@@ -3,7 +3,9 @@ import ArticleCard from '../components/ArticleCard.js';
 import PubSlot from '../components/PubSlot.js';
 import { getArticlesPublies } from '../lib/articles.js';
 
-export const revalidate = 300;
+// Rendu à la demande plutôt qu'ISR : évite que `next build` (ex. dans un
+// conteneur Docker) ait besoin d'un accès à la base de données.
+export const dynamic = 'force-dynamic';
 
 export default async function AccueilPage() {
   const articles = await getArticlesPublies({ limite: 20 });

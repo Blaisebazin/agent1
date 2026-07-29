@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agent_veille
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définir POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: agent_veille
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # Exécutés automatiquement (dans l'ordre alphabétique) au tout premier
+      # démarrage, sur un volume vide uniquement. schema.sql et seed.sql sont
+      # idempotents (IF NOT EXISTS / ON CONFLICT DO NOTHING) ; `npm run
+      # migrate` reste disponible pour rejouer le schéma sur une base déjà
+      # initialisée.
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_veille"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://agent_veille:${POSTGRES_PASSWORD}@db:5432/agent_veille
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?définir ANTHROPIC_API_KEY dans .env}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-5}
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://agent_veille:${POSTGRES_PASSWORD}@db:5432/agent_veille
+      NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${NEXT_PUBLIC_ADSENSE_CLIENT_ID:-}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # Domaine réel en production (ex. mon-site.fr) pour un certificat TLS
+      # automatique ; ":80" en local pour tester sans nom de domaine.
+      SITE_DOMAIN: ${SITE_DOMAIN:-:80}
+    depends_on:
+      - frontend
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:

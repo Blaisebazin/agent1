@@ -4,7 +4,9 @@ import './globals.css';
 import { getDomaines } from '../lib/domaines.js';
 import Nav from '../components/Nav.js';
 
-export const revalidate = 300;
+// Rendu à la demande plutôt qu'ISR : évite que `next build` (ex. dans un
+// conteneur Docker) ait besoin d'un accès à la base de données.
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Veille & Analyse',
