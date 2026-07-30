@@ -1,4 +1,5 @@
 import { creerMessageJson } from './anthropicClient.js';
+import { env } from '../config/env.js';
 
 const SYSTEM_PROMPT = `Tu es le module de veille d'un système éditorial automatisé.
 Ton rôle : repérer des sujets d'actualité récents et pertinents dans un domaine donné, à l'aide de la recherche web — pas de les analyser ni de rédiger un article.
@@ -25,6 +26,7 @@ export async function rechercherSujets(domaine) {
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: buildUserPrompt(domaine) }],
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 5 }],
+    model: env.anthropicModelVeille,
     maxTokens: 4096,
     effort: 'medium',
     label: `veille:${domaine.slug}`,

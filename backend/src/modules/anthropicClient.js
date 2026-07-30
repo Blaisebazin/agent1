@@ -28,19 +28,19 @@ function accumulerUsage(cumul, usage) {
   cumul.cache_read_input_tokens += usage?.cache_read_input_tokens || 0;
 }
 
-function loggerUsage(label, usage) {
-  const cout = estimerCout(env.anthropicModel, usage);
+function loggerUsage(label, modele, usage) {
+  const cout = estimerCout(modele, usage);
   console.log(
-    `[usage] ${label} — entrée: ${usage.input_tokens} · sortie: ${usage.output_tokens} · ` +
+    `[usage] ${label} (${modele}) — entrée: ${usage.input_tokens} · sortie: ${usage.output_tokens} · ` +
       `cache écrit: ${usage.cache_creation_input_tokens} · cache lu: ${usage.cache_read_input_tokens}` +
       (cout !== null ? ` · coût estimé: $${cout.toFixed(4)}` : ' · coût estimé: N/A (modèle inconnu)')
   );
 }
 
-async function appelerModele({ system, tools, maxTokens, effort, messages }) {
+async function appelerModele({ model, system, tools, maxTokens, effort, messages }) {
   return client.messages
     .stream({
-      model: env.anthropicModel,
+      model,
       max_tokens: maxTokens,
       system,
       tools,
@@ -54,6 +54,7 @@ export async function creerMessageAvecOutils({
   system,
   messages,
   tools,
+  model = env.anthropicModel,
   maxTokens = 4096,
   effort = 'medium',
   label = 'appel',
@@ -61,18 +62,18 @@ export async function creerMessageAvecOutils({
   const usageCumule = nouveauUsageCumule();
 
   let historique = messages;
-  let response = await appelerModele({ system, tools, maxTokens, effort, messages: historique });
+  let response = await appelerModele({ model, system, tools, maxTokens, effort, messages: historique });
   accumulerUsage(usageCumule, response.usage);
 
   let continuations = 0;
   while (response.stop_reason === 'pause_turn' && continuations < 3) {
     historique = [...historique, { role: 'assistant', content: response.content }];
-    response = await appelerModele({ system, tools, maxTokens, effort, messages: historique });
+    response = await appelerModele({ model, system, tools, maxTokens, effort, messages: historique });
     accumulerUsage(usageCumule, response.usage);
     continuations += 1;
   }
 
-  loggerUsage(label, usageCumule);
+  loggerUsage(label, model, usageCumule);
 
   if (response.stop_reason === 'refusal') {
     throw new Error(`Requête refusée par les garde-fous du modèle (catégorie : ${response.stop_details?.category ?? 'inconnue'})`);
@@ -120,8 +121,16 @@ const CONSIGNE_CORRECTION_JSON =
 // En cas de JSON mal formé (fréquent quand l'article/l'audit cite des
 // guillemets droits à l'intérieur d'une chaîne), tente une unique
 // correction avant d'abandonner.
-export async function creerMessageJson({ system, messages, tools, maxTokens = 4096, effort = 'medium', label = 'appel' }) {
-  const response = await creerMessageAvecOutils({ system, messages, tools, maxTokens, effort, label });
+export async function creerMessageJson({
+  system,
+  messages,
+  tools,
+  model = env.anthropicModel,
+  maxTokens = 4096,
+  effort = 'medium',
+  label = 'appel',
+}) {
+  const response = await creerMessageAvecOutils({ system, messages, tools, model, maxTokens, effort, label });
 
   try {
     return extraireJson(extraireTexte(response));
@@ -138,6 +147,7 @@ export async function creerMessageJson({ system, messages, tools, maxTokens = 40
       system,
       messages: historiqueCorrection,
       tools: [],
+      model,
       maxTokens,
       effort: 'low',
       label: `${label}:correction`,

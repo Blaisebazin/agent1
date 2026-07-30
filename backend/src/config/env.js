@@ -13,8 +13,18 @@ function required(name) {
   return value;
 }
 
+const MODELE_PAR_DEFAUT = 'claude-opus-5';
+
+// Un modèle par défaut global (ANTHROPIC_MODEL), avec la possibilité de le
+// surcharger par tâche — pour tester un routage par coût/qualité (ex. un
+// modèle moins cher sur le scan réactif, plus capable sur la rédaction).
 export const env = {
   databaseUrl: required('DATABASE_URL'),
   anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
-  anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-opus-5',
+  anthropicModel: process.env.ANTHROPIC_MODEL || MODELE_PAR_DEFAUT,
+  anthropicModelVeille: process.env.ANTHROPIC_MODEL_VEILLE || process.env.ANTHROPIC_MODEL || MODELE_PAR_DEFAUT,
+  anthropicModelRedaction: process.env.ANTHROPIC_MODEL_REDACTION || process.env.ANTHROPIC_MODEL || MODELE_PAR_DEFAUT,
+  anthropicModelVerification:
+    process.env.ANTHROPIC_MODEL_VERIFICATION || process.env.ANTHROPIC_MODEL || MODELE_PAR_DEFAUT,
+  anthropicModelScanReactif: process.env.ANTHROPIC_MODEL_SCAN_REACTIF || 'claude-haiku-4-5',
 };

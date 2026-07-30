@@ -1,4 +1,5 @@
 import { creerMessageJson } from './anthropicClient.js';
+import { env } from '../config/env.js';
 
 // Seuil volontairement élevé au démarrage — à recalibrer après une phase de
 // test réelle (cf. cahier des charges, section 10.4).
@@ -41,6 +42,7 @@ export async function verifierArticle(article) {
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: buildUserPrompt(article) }],
     tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 8 }],
+    model: env.anthropicModelVerification,
     maxTokens: 12000,
     effort: 'high',
     label: 'verification',

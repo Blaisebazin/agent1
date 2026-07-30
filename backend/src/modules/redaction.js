@@ -1,4 +1,5 @@
 import { creerMessageJson } from './anthropicClient.js';
+import { env } from '../config/env.js';
 
 function buildSystemPrompt(domaine) {
   const ton = domaine.ton || 'neutre, factuel, journalistique';
@@ -52,6 +53,7 @@ export async function redigerArticle(domaine, sujetRetenu) {
       { type: 'web_search_20260209', name: 'web_search', max_uses: 6 },
       { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 6 },
     ],
+    model: env.anthropicModelRedaction,
     maxTokens: 24000,
     effort: 'high',
     label: `redaction:${domaine.slug}`,

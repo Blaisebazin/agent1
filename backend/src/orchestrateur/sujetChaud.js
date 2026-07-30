@@ -1,4 +1,5 @@
 import { creerMessageJson } from '../modules/anthropicClient.js';
+import { env } from '../config/env.js';
 
 // Seuil volontairement élevé au démarrage — à recalibrer après une phase de
 // test réelle (cf. cahier des charges, section 5 et 10.4).
@@ -54,6 +55,7 @@ export async function detecterSujetChaud(domaine) {
     system: buildSystemPrompt(domaine),
     messages: [{ role: 'user', content: buildUserPrompt(domaine) }],
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 3 }],
+    model: env.anthropicModelScanReactif,
     maxTokens: 2048,
     effort: 'low',
     label: `scan-reactif:${domaine.slug}`,
