@@ -4,11 +4,22 @@ import { executerCycleQuotidien, executerScanReactif } from './cycleEditorial.js
 
 const HEURE_BASE_CYCLE_QUOTIDIEN = 6; // heure locale du serveur
 const ECART_MINUTES_ENTRE_DOMAINES = 20; // décalage entre domaines pour ne pas tout lancer simultanément
-const INTERVALLE_SCAN_REACTIF_MINUTES = 30; // cf. cahier des charges section 5 (30 à 60 min)
+const INTERVALLE_SCAN_REACTIF_MINUTES = 60; // haut de la fourchette du cahier des charges (30 à 60 min) — limite le volume d'appels
 
 async function getDomainesActifs() {
   const { rows } = await pool.query('SELECT * FROM domaines WHERE actif = true ORDER BY id');
   return rows;
+}
+
+// Le champ "minute" d'une expression cron va de 0 à 59 : "*/60" n'a de sens
+// que par coïncidence (ne matche que la minute 0). Pour un intervalle
+// multiple de 60, on exprime donc la récurrence sur le champ "heure".
+function construireExpressionReactif(intervalleMinutes) {
+  if (intervalleMinutes % 60 === 0) {
+    const heures = intervalleMinutes / 60;
+    return heures === 1 ? '0 * * * *' : `0 */${heures} * * *`;
+  }
+  return `*/${intervalleMinutes} * * * *`;
 }
 
 function calculerHoraire(indexDomaine) {
@@ -60,7 +71,7 @@ export async function demarrerOrchestrateur() {
     );
   });
 
-  const expressionReactif = `*/${INTERVALLE_SCAN_REACTIF_MINUTES} * * * *`;
+  const expressionReactif = construireExpressionReactif(INTERVALLE_SCAN_REACTIF_MINUTES);
   cron.schedule(expressionReactif, async () => {
     console.log('[scheduler] Scan réactif — début du tour des domaines actifs');
     for (const domaine of domaines) {
