@@ -39,6 +39,18 @@ npm run dev              # http://localhost:3000
 
 Le frontend lit directement les tables `domaines` et `articles` (statut `publie` uniquement) — aucun appel à l'API Claude côté frontend. Sans `NEXT_PUBLIC_ADSENSE_CLIENT_ID`, les emplacements publicitaires affichent un placeholder visible.
 
+## Modèles Claude utilisés
+
+Routage par tâche via des variables d'environnement (`backend/src/config/env.js`) — voir
+`backend/.env.example` pour la liste complète et les surcharges possibles.
+
+| Tâche | Modèle par défaut | Pourquoi |
+|---|---|---|
+| Veille, rédaction, vérification | `claude-sonnet-5` | ~40% moins cher qu'Opus ; qualité jugée suffisante sur nos tests de rédaction (validée en conditions réelles). **La vérification n'a pas pu être revalidée en conditions réelles avec Sonnet** (crédit épuisé pendant le test comparatif) — le garde-fou tourne avec cette configuration mais son niveau de rigueur exact sur Sonnet, comparé à Opus, reste à confirmer à l'usage. |
+| Scan réactif | `claude-haiku-4-5` | Tâche la plus fréquente (toutes les 60 min × 5 domaines), la moins exigeante en jugement — validée en conditions réelles (~0,02 $/scan) |
+
+À recalibrer après une phase d'usage réel en production (cf. cahier des charges, section 10.4).
+
 ## Déploiement (Docker / VPS)
 
 Trois services applicatifs (`backend`, `frontend`, `db`) + `caddy` en reverse proxy avec HTTPS automatique.
@@ -76,6 +88,6 @@ production.
 - [x] Étape 3 — module de sélection
 - [x] Étape 4 — module d'analyse et rédaction
 - [x] Étape 5 — garde-fou d'auto-vérification
-- [x] Étape 6 — orchestrateur (scheduler + scan réactif) — scheduler validé, scan réactif en attente de revalidation live (crédit API)
+- [x] Étape 6 — orchestrateur (scheduler + scan réactif) — validé en conditions réelles (scheduler + détection de sujet chaud sur Haiku)
 - [x] Étape 7 — frontend
 - [x] Étape 8 — déploiement — Dockerfiles + docker-compose + Caddy préparés, build Docker réel non exécutable dans cet environnement (voir section Déploiement)

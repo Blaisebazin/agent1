@@ -31,7 +31,7 @@ services:
     environment:
       DATABASE_URL: postgresql://agent_veille:${POSTGRES_PASSWORD}@db:5432/agent_veille
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?définir ANTHROPIC_API_KEY dans .env}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-5}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5}
 
   frontend:
     build:

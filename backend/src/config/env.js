@@ -13,7 +13,10 @@ function required(name) {
   return value;
 }
 
-const MODELE_PAR_DEFAUT = 'claude-opus-5';
+// Sonnet 5 par défaut (plutôt qu'Opus) : ~40% moins cher, qualité jugée
+// suffisante sur nos tests de rédaction/vérification (cf. cahier des
+// charges 10.4 — calibrage à revoir après usage réel).
+const MODELE_PAR_DEFAUT = 'claude-sonnet-5';
 
 // Un modèle par défaut global (ANTHROPIC_MODEL), avec la possibilité de le
 // surcharger par tâche — pour tester un routage par coût/qualité (ex. un
