@@ -37,17 +37,40 @@ function loggerUsage(label, modele, usage) {
   );
 }
 
+// Contrairement à Opus 5 / Sonnet 5, Haiku 4.5 ne supporte pas le
+// paramètre output_config.effort (400 invalid_request_error si envoyé).
+const MODELES_SANS_PARAMETRE_EFFORT = new Set(['claude-haiku-4-5']);
+
+// Idem pour les variantes d'outils serveur à filtrage dynamique
+// (web_search_20260209 / web_fetch_20260209) : elles reposent sur
+// l'exécution de code programmatique, non supportée par Haiku 4.5, qui a
+// besoin des variantes basiques historiques.
+const MODELES_SANS_FILTRAGE_DYNAMIQUE = new Set(['claude-haiku-4-5']);
+const VARIANTE_BASIQUE_PAR_OUTIL = {
+  web_search_20260209: 'web_search_20250305',
+  web_fetch_20260209: 'web_fetch_20250910',
+};
+
+function adapterOutilsPourModele(tools, model) {
+  if (!MODELES_SANS_FILTRAGE_DYNAMIQUE.has(model)) return tools;
+  return (tools || []).map((outil) => {
+    const varianteBasique = VARIANTE_BASIQUE_PAR_OUTIL[outil.type];
+    return varianteBasique ? { ...outil, type: varianteBasique } : outil;
+  });
+}
+
 async function appelerModele({ model, system, tools, maxTokens, effort, messages }) {
-  return client.messages
-    .stream({
-      model,
-      max_tokens: maxTokens,
-      system,
-      tools,
-      output_config: { effort },
-      messages,
-    })
-    .finalMessage();
+  const params = {
+    model,
+    max_tokens: maxTokens,
+    system,
+    tools: adapterOutilsPourModele(tools, model),
+    messages,
+  };
+  if (!MODELES_SANS_PARAMETRE_EFFORT.has(model)) {
+    params.output_config = { effort };
+  }
+  return client.messages.stream(params).finalMessage();
 }
 
 export async function creerMessageAvecOutils({
