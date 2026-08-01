@@ -73,13 +73,9 @@ docker compose up -d --build
 Sur le VPS : installer Docker + Docker Compose, cloner le dépôt, pointer le DNS du domaine vers
 l'IP du serveur, puis lancer la commande ci-dessus.
 
-**Vérifié dans cet environnement** : `docker compose config` (validité du fichier), `next build`
-sans base de données accessible (le build ne dépend plus de PostgreSQL), et la résolution des
-chemins du `Dockerfile` backend simulée manuellement (`migrate.js` + démarrage de l'orchestrateur
-depuis la même arborescence que l'image). **Non vérifié** : build et exécution réels des images
-Docker — le démon Docker n'est pas disponible dans cet environnement d'exécution (pas d'accès
-privilégié). À valider sur le VPS cible ou dans un environnement avec Docker actif avant mise en
-production.
+**Vérifié en conditions réelles** : `docker compose up -d --build` sur un VPS (Debian, Docker
+installé via `get.docker.com`) — les 4 services (`db`, `backend`, `frontend`, `caddy`) démarrent
+correctement, `db` passe `healthy`, et le site est accessible via l'IP du VPS sur le port 80.
 
 ## État d'avancement
 
@@ -90,4 +86,4 @@ production.
 - [x] Étape 5 — garde-fou d'auto-vérification
 - [x] Étape 6 — orchestrateur (scheduler + scan réactif) — validé en conditions réelles (scheduler + détection de sujet chaud sur Haiku)
 - [x] Étape 7 — frontend
-- [x] Étape 8 — déploiement — Dockerfiles + docker-compose + Caddy préparés, build Docker réel non exécutable dans cet environnement (voir section Déploiement)
+- [x] Étape 8 — déploiement — Dockerfiles + docker-compose + Caddy, validé en conditions réelles sur VPS (voir section Déploiement)
