@@ -9,9 +9,8 @@ import Nav from '../components/Nav.js';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Veille & Analyse',
-  description:
-    "Analyses argumentées générées à partir d'une veille automatisée, croisant plusieurs sources par sujet.",
+  title: 'Contexta',
+  description: 'Comprendre avant de décider.',
 };
 
 export default async function RootLayout({ children }) {
@@ -31,7 +30,7 @@ export default async function RootLayout({ children }) {
         )}
         <header className="site-header">
           <Link href="/" className="site-title">
-            Veille &amp; Analyse
+            Contexta
           </Link>
           <Nav domaines={domaines} />
         </header>

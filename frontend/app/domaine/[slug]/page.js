@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const domaine = await getDomaineParSlug(slug);
   if (!domaine) return {};
   return {
-    title: `${domaine.nom} — Veille & Analyse`,
+    title: `${domaine.nom} — Contexta`,
     description: domaine.description || undefined,
   };
 }
