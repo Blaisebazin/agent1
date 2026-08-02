@@ -18,6 +18,7 @@
   --couleur-texte-doux: #3a4441;
   --couleur-fond: #eef1f2;
   --couleur-surface: #ffffff;
+  --couleur-badge-fond: #ffffff;
   --couleur-accent: #2f6f62;
   --couleur-bordure: #ccd6d4;
   --couleur-muted: #61706c;
@@ -31,6 +32,27 @@
   --domaine-intelligence-artificielle: #5b5a96;
 
   --police-affichage: 'Newsreader', Georgia, 'Times New Roman', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-texte: #ece8e2;
+    --couleur-texte-doux: #c9c2b8;
+    --couleur-fond: #1a1c1a;
+    --couleur-surface: #232624;
+    --couleur-badge-fond: #232624;
+    --couleur-accent: #6bb0a0;
+    --couleur-bordure: #3a3d3a;
+    --couleur-muted: #9a958a;
+    --couleur-reactif: #dd8a72;
+    --couleur-quotidien: #6bb0a0;
+
+    --domaine-numerique: #8fb0d6;
+    --domaine-ecosysteme: #e0a066;
+    --domaine-economie: #d4bb72;
+    --domaine-geopolitique: #b592ac;
+    --domaine-intelligence-artificielle: #a09fd6;
+  }
 }
 
 * {
@@ -217,12 +239,12 @@ main {
 }
 
 .badge-quotidien {
-  background: color-mix(in srgb, var(--couleur-quotidien) 15%, white);
+  background: color-mix(in srgb, var(--couleur-quotidien) 18%, var(--couleur-badge-fond));
   color: var(--couleur-quotidien);
 }
 
 .badge-reactif {
-  background: color-mix(in srgb, var(--couleur-reactif) 15%, white);
+  background: color-mix(in srgb, var(--couleur-reactif) 18%, var(--couleur-badge-fond));
   color: var(--couleur-reactif);
 }
 

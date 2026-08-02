@@ -1,13 +1,13 @@
-const COULEURS = {
-  numerique: '#4f6f95',
-  ecosysteme: '#b1631c',
-  economie: '#9c7a2c',
-  geopolitique: '#77506d',
-  'intelligence-artificielle': '#5b5a96',
+const VARIABLES = {
+  numerique: 'var(--domaine-numerique)',
+  ecosysteme: 'var(--domaine-ecosysteme)',
+  economie: 'var(--domaine-economie)',
+  geopolitique: 'var(--domaine-geopolitique)',
+  'intelligence-artificielle': 'var(--domaine-intelligence-artificielle)',
 };
 
-const COULEUR_DEFAUT = '#6b6b66';
+const COULEUR_DEFAUT = 'var(--couleur-muted)';
 
 export function couleurDomaine(slug) {
-  return COULEURS[slug] || COULEUR_DEFAUT;
+  return VARIABLES[slug] || COULEUR_DEFAUT;
 }
