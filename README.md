@@ -62,6 +62,8 @@ docker compose up -d --build
 
 - `SITE_DOMAIN` : nom de domaine pointant vers le VPS (ex. `mon-site.fr`) → Caddy obtient
   automatiquement un certificat Let's Encrypt. Laisser `:80` pour tester en local sans domaine.
+- `SITE_DOMAIN_WWW` (optionnel) : variante `www.` (ex. `www.mon-site.fr`), avec son propre
+  enregistrement DNS CNAME vers le domaine principal. Non définie, elle reprend `SITE_DOMAIN`.
 - Le schéma et les domaines de départ sont initialisés automatiquement au premier démarrage de
   `db` (volume vide) via `database/*.sql`, monté dans `/docker-entrypoint-initdb.d`. `npm run
   migrate` reste disponible pour rejouer le schéma sur une base déjà initialisée (ex. DB managée

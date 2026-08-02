@@ -58,6 +58,10 @@ services:
       # Domaine réel en production (ex. mon-site.fr) pour un certificat TLS
       # automatique ; ":80" en local pour tester sans nom de domaine.
       SITE_DOMAIN: ${SITE_DOMAIN:-:80}
+      # Variante www (ex. www.mon-site.fr), optionnelle. Non définie, elle
+      # reprend SITE_DOMAIN (Caddy sert alors deux fois la même adresse,
+      # sans erreur).
+      SITE_DOMAIN_WWW: ${SITE_DOMAIN_WWW:-${SITE_DOMAIN:-:80}}
     depends_on:
       - frontend
 
