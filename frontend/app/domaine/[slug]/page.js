@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
 import ArticleCard from '../../../components/ArticleCard.js';
+import ArticleLead from '../../../components/ArticleLead.js';
+import ArticleRailItem from '../../../components/ArticleRailItem.js';
 import PubSlot from '../../../components/PubSlot.js';
 import { getDomaineParSlug } from '../../../lib/domaines.js';
 import { getArticlesPublies } from '../../../lib/articles.js';
@@ -32,14 +34,37 @@ export default async function DomainePage({ params }) {
       {articles.length === 0 ? (
         <p>Aucun article publié pour ce domaine pour le moment.</p>
       ) : (
-        <div className="liste-articles">
-          {articles.map((article, index) => (
-            <Fragment key={article.id}>
-              <ArticleCard article={article} afficherDomaine={false} />
-              {index === 2 && <PubSlot slotId="domaine-1" />}
-            </Fragment>
-          ))}
-        </div>
+        (() => {
+          const [vedette, ...reste] = articles;
+          const rail = reste.slice(0, 4);
+          const suite = reste.slice(4);
+          return (
+            <>
+              <div className="layout">
+                <ArticleLead article={vedette} afficherDomaine={false} />
+                {rail.length > 0 && (
+                  <aside className="rail">
+                    <p className="rail-title">Aussi cette semaine</p>
+                    {rail.map((article) => (
+                      <ArticleRailItem key={article.id} article={article} afficherDomaine={false} />
+                    ))}
+                  </aside>
+                )}
+              </div>
+
+              {suite.length > 0 && (
+                <div className="liste-articles liste-articles-suite">
+                  {suite.map((article, index) => (
+                    <Fragment key={article.id}>
+                      <ArticleCard article={article} afficherDomaine={false} />
+                      {index === 2 && <PubSlot slotId="domaine-1" />}
+                    </Fragment>
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })()
       )}
     </div>
   );
