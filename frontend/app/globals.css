@@ -1,11 +1,36 @@
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/newsreader-bold-700.woff2') format('woff2');
+}
+
 :root {
-  --couleur-texte: #1a1a1a;
-  --couleur-fond: #ffffff;
-  --couleur-accent: #1d4ed8;
-  --couleur-bordure: #e5e5e5;
-  --couleur-muted: #6b6b6b;
-  --couleur-reactif: #b91c1c;
-  --couleur-quotidien: #0f766e;
+  --couleur-texte: #1c2422;
+  --couleur-texte-doux: #3a4441;
+  --couleur-fond: #eef1f2;
+  --couleur-surface: #ffffff;
+  --couleur-accent: #2f6f62;
+  --couleur-bordure: #ccd6d4;
+  --couleur-muted: #61706c;
+  --couleur-reactif: #a23b2e;
+  --couleur-quotidien: #2f6f62;
+
+  --domaine-numerique: #4f6f95;
+  --domaine-ecosysteme: #b1631c;
+  --domaine-economie: #9c7a2c;
+  --domaine-geopolitique: #77506d;
+  --domaine-intelligence-artificielle: #5b5a96;
+
+  --police-affichage: 'Newsreader', Georgia, 'Times New Roman', serif;
 }
 
 * {
@@ -20,6 +45,13 @@ body {
   line-height: 1.6;
 }
 
+h1,
+h2 {
+  font-family: var(--police-affichage);
+  font-style: normal;
+  font-weight: 700;
+}
+
 a {
   color: var(--couleur-accent);
   text-decoration: none;
@@ -29,26 +61,65 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ============ Masthead ============ */
+
 .site-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--couleur-bordure);
+  padding: 1.75rem 1.5rem 0;
+  border-bottom: 3px solid var(--couleur-texte);
+}
+
+.site-header-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-bottom: 1.1rem;
 }
 
 .site-title {
+  display: inline-block;
+  font-family: var(--police-affichage);
+  font-style: italic;
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.9rem;
   color: var(--couleur-texte);
+  letter-spacing: -0.01em;
+}
+
+.site-baseline {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--couleur-accent);
+  margin: 0.3rem 0 1.1rem;
 }
 
 .site-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
+}
+
+.site-nav a {
+  color: var(--couleur-texte);
+  text-decoration: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 100px;
+}
+
+.site-nav a:hover {
+  border-color: var(--couleur-accent);
+  text-decoration: none;
+}
+
+.site-nav a.is-current {
+  background: var(--couleur-texte);
+  border-color: var(--couleur-texte);
+  color: var(--couleur-fond);
 }
 
 main {
@@ -66,20 +137,45 @@ main {
   border-top: 1px solid var(--couleur-bordure);
 }
 
+/* ============ Listes d'articles ============ */
+
 .liste-articles {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
 }
 
+.domaine-description {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--couleur-accent);
+  font-size: 1.05rem;
+}
+
+.article-card {
+  border-left: 3px solid var(--domaine-couleur, var(--couleur-bordure));
+  padding-left: 1.1rem;
+}
+
 .article-card h2 {
   margin: 0.35rem 0;
   font-size: 1.3rem;
+  line-height: 1.3;
 }
 
 .article-card p {
   margin: 0;
   color: var(--couleur-muted);
+}
+
+.sources-signature {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--couleur-accent);
+  margin: 0.1rem 0 0.55rem;
 }
 
 .article-card-meta,
@@ -93,11 +189,23 @@ main {
 }
 
 .domaine-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   font-size: 0.7rem;
-  color: var(--couleur-accent);
+  color: var(--couleur-muted);
+}
+
+.domaine-tag::before {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: var(--domaine-couleur, var(--couleur-accent));
+  flex: none;
 }
 
 .badge {
@@ -117,6 +225,8 @@ main {
   background: color-mix(in srgb, var(--couleur-reactif) 15%, white);
   color: var(--couleur-reactif);
 }
+
+/* ============ Article ============ */
 
 .page-article h1 {
   margin-top: 0.75rem;
@@ -140,6 +250,168 @@ main {
 .article-sources ul {
   padding-left: 1.2rem;
 }
+
+/* ============ Page À propos ============ */
+
+.apropos-intro {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1.75rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+
+.portrait-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.portrait-frame {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--couleur-texte);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--couleur-texte) 8%, var(--couleur-fond)) 0%,
+    color-mix(in srgb, var(--couleur-texte) 18%, var(--couleur-fond)) 100%
+  );
+  filter: grayscale(1) contrast(1.05);
+}
+
+.portrait-frame svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder-tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.4rem 0.5rem;
+  background: color-mix(in srgb, var(--couleur-texte) 82%, transparent);
+  color: var(--couleur-fond);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.portrait-caption {
+  font-size: 0.78rem;
+  color: var(--couleur-muted);
+  line-height: 1.5;
+}
+
+.portrait-caption strong {
+  display: block;
+  color: var(--couleur-texte);
+  font-family: var(--police-affichage);
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.05rem;
+  margin-bottom: 0.15rem;
+}
+
+.apropos-texte .eyebrow {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--couleur-reactif);
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.apropos-texte h1 {
+  font-size: 1.7rem;
+  line-height: 1.22;
+  margin: 0 0 0.9rem;
+  text-wrap: balance;
+}
+
+.apropos-texte p {
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: var(--couleur-texte-doux);
+  margin: 0 0 0.85rem;
+}
+
+.methode-titre {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--couleur-muted);
+  margin: 0 0 1.1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--couleur-bordure);
+}
+
+.methode-grille {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1.75rem;
+}
+
+.methode-etape .num {
+  font-family: var(--police-affichage);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--couleur-accent);
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.methode-etape h3 {
+  font-family: var(--police-affichage);
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  margin: 0 0 0.4rem;
+}
+
+.methode-etape p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--couleur-texte-doux);
+  margin: 0;
+}
+
+.disclosure {
+  margin-top: 2.25rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 4px;
+  background: var(--couleur-surface);
+  font-size: 0.88rem;
+  line-height: 1.58;
+  color: var(--couleur-texte-doux);
+}
+
+.disclosure strong {
+  color: var(--couleur-texte);
+}
+
+@media (max-width: 560px) {
+  .apropos-intro {
+    grid-template-columns: 1fr;
+  }
+  .portrait-block {
+    max-width: 200px;
+  }
+  .methode-grille {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ Publicité ============ */
 
 .pub-slot {
   margin: 2rem 0;

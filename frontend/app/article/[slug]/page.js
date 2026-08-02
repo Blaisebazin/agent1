@@ -4,6 +4,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import CycleBadge from '../../../components/CycleBadge.js';
 import PubSlot from '../../../components/PubSlot.js';
 import { getArticleParSlug } from '../../../lib/articles.js';
+import { couleurDomaine } from '../../../lib/domaineCouleur.js';
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -52,7 +53,7 @@ export default async function ArticlePage({ params }) {
   const sources = Array.isArray(article.sources) ? article.sources : [];
 
   return (
-    <article className="page-article">
+    <article className="page-article" style={{ '--domaine-couleur': couleurDomaine(article.domaine_slug) }}>
       <div className="article-meta">
         <span className="domaine-tag">{article.domaine_nom}</span>
         <CycleBadge typeCycle={article.type_cycle} />
@@ -60,6 +61,11 @@ export default async function ArticlePage({ params }) {
       </div>
 
       <h1>{article.titre}</h1>
+      {sources.length > 0 && (
+        <p className="sources-signature">
+          {sources.length} source{sources.length > 1 ? 's' : ''} croisée{sources.length > 1 ? 's' : ''}
+        </p>
+      )}
       <p className="article-extrait">{article.extrait}</p>
 
       <PubSlot slotId="article-haut" />

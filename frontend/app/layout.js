@@ -29,10 +29,13 @@ export default async function RootLayout({ children }) {
           />
         )}
         <header className="site-header">
-          <Link href="/" className="site-title">
-            Contexta
-          </Link>
-          <Nav domaines={domaines} />
+          <div className="site-header-inner">
+            <Link href="/" className="site-title">
+              Contexta
+            </Link>
+            <p className="site-baseline">Comprendre avant de décider.</p>
+            <Nav domaines={domaines} />
+          </div>
         </header>
         <main>{children}</main>
         <footer className="site-footer">
