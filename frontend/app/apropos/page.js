@@ -16,7 +16,7 @@ export default function AproposPage() {
             <span className="placeholder-tag">Photo à intégrer — traitement N&amp;B</span>
           </div>
           <p className="portrait-caption">
-            <strong>[Prénom Nom]</strong>
+            <strong>Blaise Bazinga</strong>
             Fondateur et éditeur de Contexta
           </p>
         </div>
