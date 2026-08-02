@@ -8,12 +8,13 @@ export default function AproposPage() {
     <div className="page-apropos">
       <div className="apropos-intro">
         <div className="portrait-block">
-          <div className="portrait-frame" aria-hidden="true">
-            <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMax slice">
-              <circle cx="120" cy="112" r="52" fill="rgba(0,0,0,0.28)" />
-              <path d="M20 300 C20 210 60 168 120 168 C180 168 220 210 220 300 Z" fill="rgba(0,0,0,0.28)" />
-            </svg>
-            <span className="placeholder-tag">Photo à intégrer — traitement N&amp;B</span>
+          <div className="portrait-frame">
+            <img
+              src="/images/blaise-apropos.jpg"
+              alt="Portrait de Blaise Bazinga"
+              width="480"
+              height="600"
+            />
           </div>
           <p className="portrait-caption">
             <strong>Blaise Bazinga</strong>
