@@ -1,0 +1,15 @@
+{
+  "name": "qr-location-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Affiche 'où je suis en ce moment' derriere un QR code fixe, mis a jour depuis une page admin mobile.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.3"
+  }
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Publier mon statut</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📍%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234fd1a5'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E📍%3C/text%3E%3C/svg%3E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Où je suis" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><h1>Publier mon statut</h1></header>
+
+    <div id="login-card" class="card" hidden>
+      <div class="field">
+        <label for="token">Code secret</label>
+        <input type="text" id="token" autocomplete="off" placeholder="Ton code" />
+      </div>
+      <button class="primary" id="login-btn">Entrer</button>
+      <p class="msg" id="login-msg"></p>
+    </div>
+
+    <div id="admin-card" class="card" hidden>
+      <div class="toggle-row">
+        <label for="active">Statut visible sur la page publique</label>
+        <label class="switch">
+          <input type="checkbox" id="active" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" maxlength="280" placeholder="Je mange au restaurant La Pallotte ce midi"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="placeName">Nom du lieu (optionnel)</label>
+        <input type="text" id="placeName" maxlength="120" placeholder="La Pallotte" />
+      </div>
+
+      <div class="field">
+        <label for="address">Adresse (pour l'itinéraire)</label>
+        <input type="text" id="address" maxlength="200" placeholder="12 rue des Lilas, Lyon" />
+      </div>
+
+      <button class="primary" id="publish-btn">Publier</button>
+      <button class="secondary" id="logout-btn">Se déconnecter</button>
+      <p class="msg" id="publish-msg"></p>
+    </div>
+
+    <div class="qr-card">
+      <img id="qr-img" alt="QR code de la page publique" />
+      <div>
+        <a class="download" id="qr-download" download="qr-ou-je-suis.png">Télécharger le QR code pour l'imprimer</a>
+      </div>
+      <p class="hint" id="qr-target-hint"></p>
+    </div>
+  </div>
+  <script src="/admin.js"></script>
+</body>
+</html>
