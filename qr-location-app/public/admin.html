@@ -48,7 +48,26 @@
         <input type="text" id="address" maxlength="200" placeholder="12 rue des Lilas, Lyon" />
       </div>
 
+      <div class="field">
+        <label>Lieux favoris</label>
+        <div id="favorites-list" class="favorites-list"></div>
+        <button type="button" class="secondary" id="save-favorite-btn">⭐ Enregistrer le lieu actuel</button>
+      </div>
+
+      <div class="field">
+        <label for="duration">Durée avant expiration</label>
+        <select id="duration">
+          <option value="60">1 heure</option>
+          <option value="120">2 heures</option>
+          <option value="180" selected>3 heures</option>
+          <option value="360">6 heures</option>
+          <option value="1440">24 heures</option>
+          <option value="0">Jusqu'à ce que je change</option>
+        </select>
+      </div>
+
       <button class="primary" id="publish-btn">Publier</button>
+      <button class="secondary" id="share-btn">🔗 Partager le lien</button>
       <button class="secondary" id="logout-btn">Se déconnecter</button>
       <p class="msg" id="publish-msg"></p>
     </div>

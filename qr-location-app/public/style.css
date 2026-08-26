@@ -221,3 +221,40 @@ button.secondary {
   margin-top: 8px;
   line-height: 1.5;
 }
+
+.favorites-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.favorites-list:empty::after {
+  content: "Aucun favori pour l'instant.";
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.favorite-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0d1216;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 8px 6px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.favorite-chip .remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px;
+}
+.favorite-chip .remove:hover { color: var(--danger); }

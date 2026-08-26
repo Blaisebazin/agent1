@@ -51,3 +51,15 @@ donc une fois l'app déployée en production, pas depuis un `localhost`.
   publies toi-même.
 - Si le statut est mis sur « invisible » (interrupteur en haut de la page admin), la page publique
   affiche « pas d'information disponible » au lieu du dernier message.
+
+## Fonctionnalités additionnelles
+
+- **Expiration automatique** : à la publication, choisis une durée (1h, 2h, 3h, 6h, 24h ou « jusqu'à
+  ce que je change »). Passé ce délai, la page publique repasse automatiquement sur « pas
+  d'information disponible », sans action de ta part.
+- **Lieux favoris** : le bouton « ⭐ Enregistrer le lieu actuel » sauvegarde le nom + l'adresse en
+  cours dans une liste réutilisable (jusqu'à 20). Un clic sur un favori remplit le formulaire, une
+  croix le supprime. Stockés dans `data/favorites.json`, accessibles uniquement avec `ADMIN_TOKEN`.
+- **Partage du lien** : le bouton « 🔗 Partager le lien » ouvre le partage natif du téléphone (SMS,
+  WhatsApp, etc.) quand il est disponible, sinon copie l'URL publique dans le presse-papier —
+  pratique pour envoyer ta localisation à quelqu'un qui n'a pas d'appareil photo sous la main.
