@@ -54,6 +54,7 @@ function publicUrlFor(req) {
 }
 
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
